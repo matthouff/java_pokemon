@@ -3,6 +3,7 @@ package com.pokemon.pokemon.entities;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Cascade;
 
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -22,9 +23,14 @@ public class Pokemon {
     @Column(name="CP")
     private int cp;
 
-
     @Column(name="PICTURE")
     private String picture;
+
+    @Column(name="CREATED_AT")
+    private Date createdAt;
+
+    @Column(name="UPDATED_AT")
+    private Date updatedAt;
 
     // MERGE permet de se lier aux autres données, si les types n'existaient pas il faudrait mettre PERSIST
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
@@ -93,5 +99,21 @@ public class Pokemon {
 
     public void setTypes(List<Type> types) {
         this.types = types;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt() {
+        this.updatedAt = new Date();
     }
 }
