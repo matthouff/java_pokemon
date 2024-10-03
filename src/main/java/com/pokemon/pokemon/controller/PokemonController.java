@@ -36,7 +36,7 @@ public class PokemonController {
     @PutMapping(path = "edit", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Pokemon update(@RequestBody Pokemon pokemon){
         Pokemon pokemonExist = pokemonService.findPokemonById(pokemon.getId());
-        System.out.println(pokemon.getName());
+
         if(pokemonExist != null){
             return pokemonService.update(pokemon);
         }
