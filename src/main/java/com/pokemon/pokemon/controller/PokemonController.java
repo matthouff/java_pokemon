@@ -23,6 +23,8 @@ public class PokemonController {
     @ResponseStatus(value = HttpStatus.CREATED)
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public Pokemon create(@RequestBody Pokemon pokemon){
+        System.err.println(pokemon.getName());
+
         Pokemon pokemonExist = pokemonService.findByName(pokemon.getName().toLowerCase());
         System.out.println(pokemonExist != null);
         if(pokemonExist == null){
@@ -31,10 +33,10 @@ public class PokemonController {
         return null;
     }
 
-    @PutMapping(path = "edit/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Pokemon create(@PathVariable Long id, @RequestBody Pokemon pokemon){
-        Pokemon pokemonExist = pokemonService.findPokemonById(id);
-        System.out.println(pokemonExist != null);
+    @PutMapping(path = "edit", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Pokemon update(@RequestBody Pokemon pokemon){
+        Pokemon pokemonExist = pokemonService.findPokemonById(pokemon.getId());
+        System.out.println(pokemon.getName());
         if(pokemonExist != null){
             return pokemonService.update(pokemon);
         }

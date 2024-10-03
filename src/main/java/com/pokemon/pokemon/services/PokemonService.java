@@ -21,16 +21,14 @@ public class PokemonService implements IPokemonService {
         return pokemonRepository.save(pokemon);
     }
     public Pokemon update(Pokemon pokemon){
-        Optional<Pokemon> existingPokemonOpt = pokemonRepository.findById(pokemon.getId());
+        System.out.println(pokemon.getId());
 
-        if (existingPokemonOpt.isPresent()) {
-            Pokemon existingPokemon = existingPokemonOpt.get();
-            // Mettre à jour uniquement updatedAt
-            existingPokemon.setUpdatedAt(new Date()); // Met à jour la date actuelle
-            // Vous pouvez également mettre à jour d'autres champs si nécessaire
-            return pokemonRepository.save(existingPokemon); // Sauvegarder les changements
-        }
-        return null; // Gérer le cas où le Pokémon n'est pas trouvé
+        System.out.println(pokemon.getName());
+        // Mettre à jour uniquement updatedAt
+        pokemon.setUpdatedAt(new Date()); // Met à jour la date actuelle
+        // Vous pouvez également mettre à jour d'autres champs si nécessaire
+        return pokemonRepository.save(pokemon); // Sauvegarder les changements
+
     }
     public void delete(Long pokemonId){
         pokemonRepository.deleteById(pokemonId);
