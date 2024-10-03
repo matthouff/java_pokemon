@@ -4,6 +4,7 @@ import com.pokemon.pokemon.entities.Pokemon;
 import com.pokemon.pokemon.repository.PokemonRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,8 +17,20 @@ public class PokemonService implements IPokemonService {
         this.pokemonRepository = pokemonRepository;
     }
 
-    public void create(Pokemon pokemon){
-        pokemonRepository.save(pokemon);
+    public Pokemon create(Pokemon pokemon){
+        return pokemonRepository.save(pokemon);
+    }
+    public Pokemon update(Pokemon pokemon){
+        Optional<Pokemon> existingPokemonOpt = pokemonRepository.findById(pokemon.getId());
+
+        if (existingPokemonOpt.isPresent()) {
+            Pokemon existingPokemon = existingPokemonOpt.get();
+            // Mettre à jour uniquement updatedAt
+            existingPokemon.setUpdatedAt(new Date()); // Met à jour la date actuelle
+            // Vous pouvez également mettre à jour d'autres champs si nécessaire
+            return pokemonRepository.save(existingPokemon); // Sauvegarder les changements
+        }
+        return null; // Gérer le cas où le Pokémon n'est pas trouvé
     }
     public void delete(Long pokemonId){
         pokemonRepository.deleteById(pokemonId);
@@ -35,11 +48,6 @@ public class PokemonService implements IPokemonService {
     public Pokemon findPokemonById(Long pokemonId) {
         Optional<Pokemon> optionnalSelected = pokemonRepository.findById(pokemonId);
         return optionnalSelected.orElse(null);
-    }
-
-    @Override
-    public Pokemon editPokemon(Pokemon pokemon) {
-        return null;
     }
 
 

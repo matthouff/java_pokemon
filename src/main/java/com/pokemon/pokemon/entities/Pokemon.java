@@ -1,7 +1,6 @@
 package com.pokemon.pokemon.entities;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.Cascade;
 
 import java.util.Date;
 import java.util.List;
@@ -27,9 +26,11 @@ public class Pokemon {
     private String picture;
 
     @Column(name="CREATED_AT")
+    @Temporal(TemporalType.TIMESTAMP)  // Enregistre la date et l'heure
     private Date createdAt;
 
     @Column(name="UPDATED_AT")
+    @Temporal(TemporalType.TIMESTAMP)  // Enregistre la date et l'heure
     private Date updatedAt;
 
     // MERGE permet de se lier aux autres données, si les types n'existaient pas il faudrait mettre PERSIST
@@ -52,6 +53,21 @@ public class Pokemon {
         this.picture = picture;
         this.types = types;
     }
+
+
+    // Utilisation des annotations pour gérer automatiquement les dates
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = new Date();
+        this.updatedAt = new Date();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = new Date();
+    }
+
+
 
     public int getHp() {
         return hp;
@@ -113,7 +129,7 @@ public class Pokemon {
         return updatedAt;
     }
 
-    public void setUpdatedAt() {
-        this.updatedAt = new Date();
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

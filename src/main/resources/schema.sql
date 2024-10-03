@@ -4,8 +4,8 @@ CREATE TABLE pokemon (
     hp INT NOT NULL,
     cp INT NOT NULL,
     picture VARCHAR(255) NOT NULL,
-    created_at DATE DEFAULT NOW(),
-    updated_at DATE DEFAULT NOW()
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
 );
 
 CREATE TABLE type (

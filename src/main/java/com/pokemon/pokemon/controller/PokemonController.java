@@ -22,12 +22,23 @@ public class PokemonController {
 
     @ResponseStatus(value = HttpStatus.CREATED)
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void create(@RequestBody Pokemon pokemon){
+    public Pokemon create(@RequestBody Pokemon pokemon){
         Pokemon pokemonExist = pokemonService.findByName(pokemon.getName().toLowerCase());
         System.out.println(pokemonExist != null);
         if(pokemonExist == null){
-            pokemonService.create(pokemon);
+            return pokemonService.create(pokemon);
         }
+        return null;
+    }
+
+    @PutMapping(path = "edit/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Pokemon create(@PathVariable Long id, @RequestBody Pokemon pokemon){
+        Pokemon pokemonExist = pokemonService.findPokemonById(id);
+        System.out.println(pokemonExist != null);
+        if(pokemonExist != null){
+            return pokemonService.update(pokemon);
+        }
+        return null;
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
