@@ -12,7 +12,7 @@ CREATE TABLE users (
   created_at TIMESTAMP NOT NULL DEFAULT now(), -- Automatically set to current timestamp on creation
   updated_at TIMESTAMP DEFAULT now(), -- Automatically set to current timestamp on update
   active boolean NOT NULL,
-  role_id INTEGER REFERENCES roles(id) UNIQUE -- Foreign key referencing the role table
+  role_id INTEGER REFERENCES roles(id) -- Foreign key referencing the role table
 );
 
 CREATE TABLE pokemon (

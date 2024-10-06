@@ -1,5 +1,6 @@
 package com.pokemon.pokemon.entities;
 
+import com.pokemon.pokemon.TypeDeRole;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -28,9 +29,11 @@ public class User implements UserDetails {
     @Temporal(TemporalType.TIMESTAMP)  // Enregistre la date et l'heure
     private Date updatedAt = new Date();
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     private Role role;
 
+    public User() {
+    }
 
     public User(Long id, String name, String lastname, String email, String password, boolean active, Date createdAt, Date updatedAt, Role role) {
         this.id = id;
@@ -102,6 +105,14 @@ public class User implements UserDetails {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     @PrePersist
