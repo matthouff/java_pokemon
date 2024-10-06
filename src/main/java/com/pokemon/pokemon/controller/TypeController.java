@@ -2,6 +2,7 @@ package com.pokemon.pokemon.controller;
 
 import com.pokemon.pokemon.entities.Type;
 import com.pokemon.pokemon.services.TypeService;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,7 +31,7 @@ public class TypeController {
         typeService.delete(typeId);
     }
 
-    @GetMapping()
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Type> typeList(){
         return typeService.typeList();
     }

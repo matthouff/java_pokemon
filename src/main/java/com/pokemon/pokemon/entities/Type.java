@@ -3,6 +3,7 @@ package com.pokemon.pokemon.entities;
 import jakarta.persistence.*;
 
 import java.util.List;
+import java.util.Locale;
 
 @Entity
 @Table(name = "type")

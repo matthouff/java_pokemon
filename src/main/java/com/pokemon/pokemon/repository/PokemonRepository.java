@@ -15,5 +15,6 @@ public interface PokemonRepository extends JpaRepository<Pokemon, Long> {
 
     // Spring sait que quand il y a "findBy" il doit chercher l'élément qui sera juste après (Name)
     Pokemon findByName(String name);
+    Pokemon[] findByNameContaining(String name);
 
 }

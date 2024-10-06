@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PokemonService implements IPokemonService {
@@ -31,7 +32,12 @@ public class PokemonService implements IPokemonService {
     }
 
     public List<Pokemon> getAll(){
-        return pokemonRepository.findAll();
+        return pokemonRepository.findAll().stream().sorted((x,y) -> x.getCreatedAt().compareTo(y.getCreatedAt())).collect(Collectors.toList());
+    }
+
+    public Pokemon[] findAllByName(String name) {
+        System.out.println(name);
+        return pokemonRepository.findByNameContaining(name);
     }
 
     public Pokemon findByName(String name) {

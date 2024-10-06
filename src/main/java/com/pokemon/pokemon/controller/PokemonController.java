@@ -54,6 +54,11 @@ public class PokemonController {
         return pokemonService.findPokemonById(pokemonId);
     }
 
+    @GetMapping(path = "search", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Pokemon[] getPokemon(@RequestParam String name){
+        return pokemonService.findAllByName(name);
+    }
+
     @DeleteMapping(path = "{pokemonId}")
     public void delete(@PathVariable Long pokemonId){
         pokemonService.delete(pokemonId);
