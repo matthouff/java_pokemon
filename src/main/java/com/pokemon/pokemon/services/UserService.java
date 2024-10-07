@@ -6,6 +6,9 @@ import com.pokemon.pokemon.entities.User;
 import com.pokemon.pokemon.entities.Validation;
 import com.pokemon.pokemon.repository.RoleRepository;
 import com.pokemon.pokemon.repository.UserRepository;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +17,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 
     private UserRepository userRepository;
     private RoleRepository roleRepository;
@@ -73,5 +76,12 @@ public class UserService {
 
         user.setActive(true);
         userRepository.save(user);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String userEmail) throws UsernameNotFoundException {
+        return userRepository
+                .findByEmail(userEmail)
+                .orElseThrow(() -> new UsernameNotFoundException("Aucun utilisateur ne correspond à cet email"));
     }
 }
