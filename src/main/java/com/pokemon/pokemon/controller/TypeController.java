@@ -9,7 +9,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "type")
-@CrossOrigin(origins = "http://localhost:4200") // Pour autoriser Angular à appeler cette API
 public class TypeController {
     TypeService typeService;
 

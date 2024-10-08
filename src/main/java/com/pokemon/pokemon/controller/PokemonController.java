@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "pokemon")
-@CrossOrigin(origins = "http://localhost:4200") // Pour autoriser Angular à appeler cette API
+@CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
 public class PokemonController {
 
     PokemonService pokemonService;

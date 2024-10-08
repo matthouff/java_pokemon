@@ -17,6 +17,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity
@@ -33,6 +35,15 @@ public class SecurityConfig {
 
     ////////////////////////////////// CRÉATION ET VALIDATION DE COMPTE ///////////////////////////////////////
 
+    /*
+    * La ligne requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() permet simplement de laisser passer les requêtes
+    * préalables CORS, mais les requêtes réelles (comme GET, POST, PUT, DELETE) pour les routes protégées nécessiteront
+    * toujours une authentification.
+    * En gros, les requêtes OPTIONS sont des "demandes d'autorisation" envoyées par le navigateur avant les vraies
+    * requêtes pour vérifier si elles sont autorisées. Cela ne donne pas accès aux ressources protégées, juste
+    * permet de vérifier les permissions.
+    * */
+
     // Permet de sécuriser l'application afin de bloquer toutes les routes sauf la route "/inscription"
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -42,10 +53,10 @@ public class SecurityConfig {
                 // Donne l'autorisation aux routes défini ci-dessous
                 .authorizeHttpRequests(
                         authorize -> authorize
-                                .requestMatchers(HttpMethod.POST, "/inscription").permitAll()
-                                .requestMatchers(HttpMethod.POST, "/activation").permitAll()
-                                .requestMatchers(HttpMethod.POST, "/connexion")
-                                .permitAll()
+                                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/user/inscription").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/user/activation").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/user/connexion").permitAll()
                                 .anyRequest()
                                 .authenticated()
                 )
@@ -54,7 +65,6 @@ public class SecurityConfig {
                         httpSecuritySessionManagementConfigurer ->
                             httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

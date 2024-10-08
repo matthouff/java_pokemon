@@ -7,4 +7,6 @@ import java.util.Optional;
 
 public interface ValidationRepository extends CrudRepository<Validation, Long> {
     Optional<Validation> findByCode(String code);
+
+    Validation findByUserId(Long id);
 }

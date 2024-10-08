@@ -6,6 +6,8 @@ import com.pokemon.pokemon.entities.User;
 import com.pokemon.pokemon.entities.Validation;
 import com.pokemon.pokemon.repository.RoleRepository;
 import com.pokemon.pokemon.repository.UserRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,7 +20,6 @@ import java.util.Optional;
 
 @Service
 public class UserService implements UserDetailsService {
-
     private UserRepository userRepository;
     private RoleRepository roleRepository;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -67,12 +68,12 @@ public class UserService implements UserDetailsService {
 
     public void activation(Map<String, String> activation) {
         Validation validation = validationService.lireEnFonctionDuCode(activation.get("code"));
+        User user = userRepository.findById(validation.getUser().getId()).orElseThrow(() -> new RuntimeException("Utilisateur inconnu"));
 
         if (Instant.now().isAfter(validation.getExpiration())){
-            throw new RuntimeException("Votre code à expiré");
+            validationService.sendCode(user);
+            throw new RuntimeException("Votre code à expiré, un nouveau code vous a été envoyé à: " + user.getEmail());
         }
-
-        User user = userRepository.findById(validation.getUser().getId()).orElseThrow(() -> new RuntimeException("Utilisateur inconnu"));
 
         user.setActive(true);
         userRepository.save(user);
