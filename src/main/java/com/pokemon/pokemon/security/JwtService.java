@@ -28,7 +28,6 @@ public class JwtService {
 
     public Map<String, String> generate(String email){
         User user = (User) userService.loadUserByUsername(email);
-
         return this.generateJwt(user);
     }
 

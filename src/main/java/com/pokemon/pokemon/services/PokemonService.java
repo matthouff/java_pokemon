@@ -10,7 +10,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class PokemonService implements IPokemonService {
+public class PokemonService {
     private PokemonRepository pokemonRepository;
 
     // Appeler les dépendances utilisées
@@ -49,20 +49,4 @@ public class PokemonService implements IPokemonService {
         Optional<Pokemon> optionnalSelected = pokemonRepository.findById(pokemonId);
         return optionnalSelected.orElse(null);
     }
-
-
-
-
-//    private PokemonRepository pokemonRepository;
-//
-//    @Autowired
-//    public PokemonService(PokemonRepository pokemonRepository) {
-//        this.pokemonRepository = pokemonRepository;
-//    }
-//
-//    @Override
-//    public Pokemon createPokemon(Pokemon pokemon){
-//        return pokemonRepository.save(pokemon);
-//    }
-
 }

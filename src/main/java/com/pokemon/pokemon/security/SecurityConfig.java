@@ -1,5 +1,6 @@
 package com.pokemon.pokemon.security;
 
+import com.pokemon.pokemon.CorsFilter;
 import com.pokemon.pokemon.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -65,6 +66,7 @@ public class SecurityConfig {
                         httpSecuritySessionManagementConfigurer ->
                             httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
+                .addFilterBefore(new CorsFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "pokemon")
-@CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
+@CrossOrigin(origins = "http://localhost:4200")
 public class PokemonController {
 
     PokemonService pokemonService;
@@ -63,41 +63,4 @@ public class PokemonController {
     public void delete(@PathVariable Long pokemonId){
         pokemonService.delete(pokemonId);
     }
-
-//    private final Pokedex pokedex;
-//    IPokemonService pokemonService;
-//    private static long nextId = 1;
-//
-//    @Autowired
-//    public PokemonController(Pokedex pokedex, IPokemonService pokemonService) {
-//        this.pokedex = pokedex;
-//        this.pokemonService = pokemonService;
-//    }
-//
-//    @GetMapping(path = "string")
-//   public String getString(){
-//        System.out.println("coucou");
-//        return "Chaine de caractère trouvé hehe";
-//    }
-//
-//
-//    @GetMapping
-//    public List<Pokemon> getAllPokemons() {
-//        System.out.println("coucou");
-//        return pokedex.getPokemons();
-//    }
-//
-//    @PostMapping
-//    public Pokemon createPokemon(@RequestBody Pokemon pokemon) {
-//        if (pokemon.getId() == null) {
-//            pokemon.setId(nextId++);
-//        }
-//
-//        System.out.println("////Controller////");
-//        pokemonService.createPokemon(pokemon);
-//        System.out.println("////////");
-//        return pokemon;
-//    }
-
-    // ... autres méthodes pour mettre à jour, supprimer, etc.
 }
