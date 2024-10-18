@@ -1,6 +1,8 @@
 package com.pokemon.pokemon.security;
 
+import com.pokemon.pokemon.entities.Jwt;
 import com.pokemon.pokemon.entities.User;
+import com.pokemon.pokemon.repository.JwtRepository;
 import com.pokemon.pokemon.services.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -18,17 +20,30 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
+    public static final String BEARER = "bearer";
     private final String ENCRYPTION_KEY = "2465f9cfc7879457f57f42b74fcf225936548054d9609c40bb9664bb2700572a";
-
     private UserService userService;
+    private JwtRepository jwtRepository;
 
-    public JwtService(UserService userService) {
+    public JwtService(UserService userService, JwtRepository jwtRepository) {
         this.userService = userService;
+        this.jwtRepository = jwtRepository;
     }
 
     public Map<String, String> generate(String email){
         User user = (User) userService.loadUserByUsername(email);
-        return this.generateJwt(user);
+        Map<String, String> jwtMap = this.generateJwt(user);
+
+        Jwt jwt = new Jwt();
+        jwt.setValue(jwtMap.get(BEARER));
+        jwt.setExpire(false);
+        jwt.setDesactive(false);
+        jwt.setUser(user);
+
+        System.out.println(jwt.getValue());
+
+        jwtRepository.save(jwt);
+        return jwtMap;
     }
 
     public String extractUsername(String token) {
@@ -76,7 +91,7 @@ public class JwtService {
                 .compact() // Transform en string
         ;
 
-        return Map.of("bearer", bearer);
+        return Map.of(BEARER, bearer);
     }
 
     // Site: randaomGenerate.io est conseillé pour générer une clé secrette
@@ -84,5 +99,9 @@ public class JwtService {
     private SecretKey getKey(){
         final byte[] decoder = Decoders.BASE64.decode(ENCRYPTION_KEY);
         return Keys.hmacShaKeyFor(decoder);
+    }
+
+    public Jwt tokenByValue(String value) {
+        return jwtRepository.findByValue(value).orElseThrow(() -> new RuntimeException("Token inconnu"));
     }
 }

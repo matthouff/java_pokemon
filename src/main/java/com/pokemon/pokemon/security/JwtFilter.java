@@ -1,5 +1,6 @@
 package com.pokemon.pokemon.security;
 
+import com.pokemon.pokemon.entities.Jwt;
 import com.pokemon.pokemon.services.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -28,6 +29,7 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = null;
+        Jwt tokenInBDD = null;
         String username = null;
         Boolean isTokenExpired = true;
 
@@ -37,11 +39,12 @@ public class JwtFilter extends OncePerRequestFilter {
         if(authorization != null && authorization.startsWith("Bearer ")){
             // Ici on récupère uniquement le token en "supprimant" le "Bearer "
             token = authorization.substring(7);
+            tokenInBDD = jwtService.tokenByValue(token);
             isTokenExpired = jwtService.isTokenExpired(token);
             username = jwtService.extractUsername(token);
         }
 
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null && !isTokenExpired) {
+        if (!isTokenExpired && tokenInBDD.getUser().getEmail().equals(username) && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userService.loadUserByUsername(username);
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                     userDetails,
