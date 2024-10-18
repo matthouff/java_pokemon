@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(path = "user", consumes = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "user")
 public class UserController {
     private AuthenticationManager authenticationManager;
     private UserService userService;
@@ -37,7 +37,6 @@ public class UserController {
     @PostMapping(path = "inscription")
     public ResponseEntity<String> inscription(@RequestBody User user){
         try{
-            System.out.println("coucou");
             userService.inscription(user);
             // Créer une réponse personnalisée
             return ResponseEntity.ok()
@@ -52,7 +51,6 @@ public class UserController {
     @PostMapping(path = "activation")
     public ResponseEntity<String> activation(@RequestBody Map<String, String> activation){
         try {
-            System.out.println(activation);
             userService.activation(activation);
             return ResponseEntity.ok()
                     .header("X-Custom-Header", "valeur personnalisée")
@@ -60,6 +58,12 @@ public class UserController {
         }catch (Exception e){
             return ResponseEntity.status(403).body(e.getMessage());
         }
+    }
+
+    @PostMapping(path = "deconnexion")
+    public void deconnexion(){
+        System.out.println("hey");
+        jwtService.deconnexion();
     }
 
     // Map<String, String> c'est le token et la valeur du token

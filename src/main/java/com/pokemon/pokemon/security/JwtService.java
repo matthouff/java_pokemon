@@ -9,14 +9,19 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.transaction.Transactional;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
+@Transactional
 @Service
 public class JwtService {
 
@@ -30,8 +35,13 @@ public class JwtService {
         this.jwtRepository = jwtRepository;
     }
 
+    public Jwt tokenByValue(String value) {
+        return jwtRepository.findByValueAndDesactiveAndExpire(value, false, false).orElseThrow(() -> new RuntimeException("Token inconnu"));
+    }
+
     public Map<String, String> generate(String email){
         User user = (User) userService.loadUserByUsername(email);
+        disableToken(user);
         Map<String, String> jwtMap = this.generateJwt(user);
 
         Jwt jwt = new Jwt();
@@ -44,6 +54,17 @@ public class JwtService {
 
         jwtRepository.save(jwt);
         return jwtMap;
+    }
+
+    private void disableToken(User user){
+        final List<Jwt> jwtList = jwtRepository.findByUserEmail(user.getEmail()).peek(
+                jwt -> {
+                    jwt.setDesactive(true);
+                    jwt.setExpire(true);
+                }
+        ).collect(Collectors.toList());
+
+        jwtRepository.saveAll(jwtList);
     }
 
     public String extractUsername(String token) {
@@ -101,7 +122,14 @@ public class JwtService {
         return Keys.hmacShaKeyFor(decoder);
     }
 
-    public Jwt tokenByValue(String value) {
-        return jwtRepository.findByValue(value).orElseThrow(() -> new RuntimeException("Token inconnu"));
+    public void deconnexion() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Jwt jwt = jwtRepository.findUserValidToken(
+                user.getEmail()
+        ).orElseThrow(() -> new RuntimeException("Token invalide"));
+
+        jwt.setExpire(true);
+        jwt.setDesactive(true);
+        jwtRepository.save(jwt);
     }
 }
