@@ -38,3 +38,17 @@ CREATE TABLE pokemon_type (
     CONSTRAINT fk_pokemon_type FOREIGN KEY (pokemon_id) REFERENCES pokemon(id),
     CONSTRAINT fk_type_pokemon FOREIGN KEY (type_id) REFERENCES type(id)
 );
+
+CREATE TABLE IF NOT EXISTS jwt
+(
+    id integer NOT NULL DEFAULT nextval('jwt_id_seq'::regclass),
+    desactive boolean NOT NULL,
+    expire boolean NOT NULL,
+    value character varying(255) COLLATE pg_catalog."default",
+    user_id bigint,
+    CONSTRAINT jwt_pkey PRIMARY KEY (id),
+    CONSTRAINT fk_user FOREIGN KEY (user_id)
+        REFERENCES public.users (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
